@@ -1,0 +1,17 @@
+name: Build and verify
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build and check
+        run: |
+          dotnet build
+          dotnet run --no-build -- --self-test
+          dotnet run --no-build -- --seed 42 --export planet.svg
